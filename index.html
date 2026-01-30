@@ -1,1 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Простое мини-приложение</title>
+    <meta charset="utf-8">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            max-width: 400px;
+            margin: 50px auto;
+        }
+        
+        button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            transform: scale(1.05);
+        }
+        
+        h1 {
+            margin-bottom: 30px;
+        }
+        
+        .emoji-btn {
+            font-size: 24px;
+            margin: 5px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Простая игра</h1>
+        <p>Нажми кнопку, чтобы отправить результат в Telegram!</p>
+        
+        <div id="buttons">
+            <!-- Кнопки будут добавлены через JavaScript -->
+        </div>
+        
+        <br>
+        <button onclick="sendCustomMessage()">📨 Отправить "Привет!"</button>
+        <br><br>
+        <button onclick="closeApp()">❌ Закрыть приложение</button>
+    </div>
 
+    <script>
+        // 📱 Инициализация Telegram WebApp
+        Telegram.WebApp.ready();
+        
+        // Увеличиваем размер приложения
+        Telegram.WebApp.expand();
+        
+        // Показываем кнопки с эмодзи
+        const buttonsContainer = document.getElementById('buttons');
+        const emojis = ['🎯', '🏆', '⭐', '❤️', '🚀', '🎨'];
+        
+        emojis.forEach(emoji => {
+            const button = document.createElement('button');
+            button.className = 'emoji-btn';
+            button.textContent = emoji;
+            button.onclick = () => sendEmoji(emoji);
+            buttonsContainer.appendChild(button);
+        });
+        
+        // 📤 Функция отправки эмодзи
+        function sendEmoji(emoji) {
+            const message = `Я выбрал: ${emoji}`;
+            Telegram.WebApp.sendData(message);
+            showNotification(`Отправлено: ${emoji}`);
+        }
+        
+        // 📤 Функция отправки своего сообщения
+        function sendCustomMessage() {
+            Telegram.WebApp.sendData("Привет от мини-приложения! 👋");
+            showNotification("Сообщение отправлено!");
+        }
+        
+        // 🚪 Закрыть приложение
+        function closeApp() {
+            Telegram.WebApp.close();
+        }
+        
+        // 🔔 Показываем уведомление
+        function showNotification(text) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: white;
+                color: #667eea;
+                padding: 10px 20px;
+                border-radius: 10px;
+                z-index: 1000;
+                font-weight: bold;
+            `;
+            notification.textContent = text;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 2000);
+        }
+        
+        // 🎨 Меняем цвет фона по нажатию
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'BUTTON') return;
+            
+            const colors = [
+                'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+            ];
+            
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.style.background = randomColor;
+        });
+    </script>
+</body>
+</html>
