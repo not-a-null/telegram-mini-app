@@ -2,7 +2,7 @@ import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 
 # 🔑 Вставьте сюда токен от @BotFather
-TOKEN = ""
+TOKEN = "7181622243:AAHVIIms4gDUAt6VveuH7eJANl72agXQlBY"
 bot = telebot.TeleBot(TOKEN)
 
 # 🚀 Команда /start
@@ -14,7 +14,7 @@ def start(message):
     # 🖱️ Кнопка открывает мини-приложение на GitHub Pages
     web_app_btn = InlineKeyboardButton(
         text="🎮 Открыть игру",
-        web_app=WebAppInfo(url="https://ВАШНИК.github.io/telegram-mini-app/")
+        web_app=WebAppInfo(url="https://not-a-null.github.io/telegram-mini-app/")
     )
     
     markup.add(web_app_btn)
