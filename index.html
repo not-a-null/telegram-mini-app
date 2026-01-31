@@ -1,377 +1,628 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>🕯️ Свечной магазин</title>
+    <title>Свечной магазин</title>
     <meta charset="utf-8">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         }
         
         body {
-            padding: 20px;
-            background: #f8f4e9;
+            background-color: #ffffff;
+            color: #000000;
+            line-height: 1.4;
         }
         
-        /* Вкладки */
-        .tab {
-            display: none;
-            padding: 10px;
+        .container {
+            max-width: 430px;
+            margin: 0 auto;
+            padding: 0 16px;
         }
         
-        .active {
-            display: block;
+        /* Шапка */
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
         }
         
-        /* Кнопки вкладок */
-        .tabs-header {
-            display: flex;
-            margin-bottom: 20px;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .tab-btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            background: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        
-        .tab-btn.active {
-            background: #e6b89c;
-            color: white;
-            font-weight: bold;
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 1px;
         }
         
         /* Карточка товара */
-        .candle {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        .product-card {
+            margin: 20px 0;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
         }
         
-        .candle h3 {
-            margin: 0 0 10px 0;
-            color: #8b4513;
+        .product-image {
+            height: 300px;
+            background: linear-gradient(135deg, #FFF5E1 0%, #FFE8C8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
         }
         
-        .price {
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-title {
             font-size: 20px;
-            font-weight: bold;
-            color: #d2691e;
-            margin: 10px 0;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
         
-        /* Кнопки */
-        button {
-            background: #d2691e;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
+        .product-price {
+            font-size: 24px;
+            font-weight: 600;
+            color: #000000;
+            margin: 15px 0;
+        }
+        
+        .product-color {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #f0f0f0;
             cursor: pointer;
-            font-size: 16px;
-            margin: 5px;
         }
         
-        button:hover {
-            background: #8b4513;
+        .color-option.active {
+            border-color: #000000;
+        }
+        
+        .color-black {
+            background: #1a1a1a;
+        }
+        
+        .color-cream {
+            background: #FFF5E1;
+        }
+        
+        .color-sand {
+            background: #E6D5B8;
+        }
+        
+        /* Кнопка добавления */
+        .add-to-cart-btn {
+            width: 100%;
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: opacity 0.2s;
+        }
+        
+        .add-to-cart-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .add-to-cart-btn:active {
+            opacity: 0.8;
+        }
+        
+        /* Навигация */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 1px solid #f0f0f0;
+            padding: 12px 0;
+        }
+        
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            max-width: 430px;
+            margin: 0 auto;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+        }
+        
+        .nav-text {
+            font-size: 12px;
+        }
+        
+        .nav-item.active {
+            color: #000000;
+            font-weight: 500;
         }
         
         /* Корзина */
-        .cart-item {
-            background: white;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
+        .cart-tab {
+            display: none;
+            padding-bottom: 80px;
         }
         
-        .total {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            margin: 20px 0;
-            color: #8b4513;
-        }
-        
-        /* Оплата */
-        .payment-btn {
+        .tab.active {
             display: block;
-            width: 100%;
-            margin: 10px 0;
-            padding: 15px;
-            font-size: 18px;
         }
         
-        #orderResult {
+        .empty-cart {
             text-align: center;
-            padding: 20px;
-            background: #e6ffed;
-            border-radius: 10px;
-            margin: 20px 0;
+            padding: 60px 20px;
+            color: #999999;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #FFF5E1 0%, #FFE8C8 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-right: 16px;
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .cart-item-price {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .quantity-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #f0f0f0;
+            border-radius: 50%;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .cart-total {
+            padding: 20px 0;
+            border-top: 1px solid #f0f0f0;
+            margin-top: 20px;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        
+        .total-amount {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .checkout-btn {
+            width: 100%;
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        /* Уведомление */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #000000;
+            color: #ffffff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-out;
+            z-index: 1000;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .hidden {
             display: none;
         }
     </style>
 </head>
 <body>
-    <h1>🕯️ Магазин свечей</h1>
-    
-    <!-- Кнопки вкладок -->
-    <div class="tabs-header">
-        <button class="tab-btn active" onclick="showTab('catalog')">Каталог</button>
-        <button class="tab-btn" onclick="showTab('cart')">Корзина</button>
-        <button class="tab-btn" onclick="showTab('payment')">Оплата</button>
-    </div>
-    
-    <!-- КАТАЛОГ -->
-    <div id="catalog" class="tab active">
-        <div id="catalogList">
-            <!-- Товары загрузятся через JS -->
+    <div class="container">
+        <!-- Шапка -->
+        <div class="header">
+            <div class="logo">СВЕЧНОЙ</div>
+        </div>
+        
+        <!-- Главная (каталог) -->
+        <div id="main-tab" class="tab active">
+            <div class="product-card">
+                <div class="product-image">
+                    🕯️
+                </div>
+                <div class="product-info">
+                    <div class="product-title">Свеча "Тишина"</div>
+                    <div class="product-price">1 900 ₽</div>
+                    
+                    <div>Натуральный воск, аромат сандала</div>
+                    
+                    <div style="margin: 15px 0;">Цвет:</div>
+                    <div class="product-color">
+                        <div class="color-option color-black active" onclick="selectColor('black')"></div>
+                        <div class="color-option color-cream" onclick="selectColor('cream')"></div>
+                        <div class="color-option color-sand" onclick="selectColor('sand')"></div>
+                    </div>
+                    
+                    <button class="add-to-cart-btn" onclick="addToCart()">
+                        Добавить в корзину
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Корзина -->
+        <div id="cart-tab" class="cart-tab tab">
+            <div id="cart-content">
+                <div class="empty-cart">
+                    🛒<br><br>
+                    Корзина пуста
+                </div>
+            </div>
+            
+            <div id="cart-with-items" class="hidden">
+                <div id="cart-items"></div>
+                
+                <div class="cart-total">
+                    <div class="total-row">
+                        <span>Сумма</span>
+                        <span id="subtotal">0 ₽</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Доставка</span>
+                        <span>Бесплатно</span>
+                    </div>
+                    <div class="total-row total-amount">
+                        <span>Итого</span>
+                        <span id="total">0 ₽</span>
+                    </div>
+                    
+                    <button class="checkout-btn" onclick="checkout()">
+                        Перейти к оплате
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Избранное -->
+        <div id="favorites-tab" class="tab">
+            <div class="empty-cart">
+                ❤️<br><br>
+                В избранном пока ничего нет
+            </div>
+        </div>
+        
+        <!-- Профиль -->
+        <div id="profile-tab" class="tab">
+            <div class="empty-cart">
+                👤<br><br>
+                Раздел в разработке
+            </div>
         </div>
     </div>
     
-    <!-- КОРЗИНА -->
-    <div id="cart" class="tab">
-        <div id="cartList">
-            Корзина пуста
-        </div>
-        <div id="cartTotal" class="total">Итого: 0 ₽</div>
-        <button onclick="showTab('payment')">💳 Перейти к оплате</button>
-    </div>
-    
-    <!-- ОПЛАТА -->
-    <div id="payment" class="tab">
-        <h2>💳 Оплата заказа</h2>
-        <div id="paymentTotal" class="total">0 ₽</div>
-        
-        <button class="payment-btn" onclick="payByCard()">💳 Картой онлайн</button>
-        <button class="payment-btn" onclick="payBySBP()">📱 СБП (по QR-коду)</button>
-        <button class="payment-btn" onclick="payByCrypto()">₿ Криптовалютой</button>
-        
-        <div id="orderResult">
-            <h3>✅ Заказ оформлен!</h3>
-            <p id="orderDetails"></p>
+    <!-- Нижняя навигация -->
+    <div class="bottom-nav">
+        <div class="nav-items">
+            <div class="nav-item active" onclick="switchTab('main')">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-text">Главная</div>
+            </div>
+            <div class="nav-item" onclick="switchTab('favorites')">
+                <div class="nav-icon">❤️</div>
+                <div class="nav-text">Избранное</div>
+            </div>
+            <div class="nav-item" onclick="switchTab('cart')">
+                <div class="nav-icon">🛒</div>
+                <div class="nav-text">Корзина</div>
+                <div id="cart-badge" class="hidden" style="
+                    position: absolute;
+                    top: -5px;
+                    right: -5px;
+                    background: #ff3b30;
+                    color: white;
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    font-size: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                "></div>
+            </div>
+            <div class="nav-item" onclick="switchTab('profile')">
+                <div class="nav-icon">👤</div>
+                <div class="nav-text">Профиль</div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Простые данные о свечах
-        const candles = [
-            {id: 1, name: "Ванильная свеча", price: 500, emoji: "🕯️"},
-            {id: 2, name: "Лавандовая свеча", price: 600, emoji: "🌸"},
-            {id: 3, name: "Хвойная свеча", price: 550, emoji: "🌲"},
-            {id: 4, name: "Цитрусовая свеча", price: 450, emoji: "🍊"},
-            {id: 5, name: "Шоколадная свеча", price: 650, emoji: "🍫"},
-            {id: 6, name: "Морская свеча", price: 700, emoji: "🌊"}
-        ];
+        // Инициализация Telegram WebApp
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+        Telegram.WebApp.setBackgroundColor('#ffffff');
+        
+        // Данные о товаре
+        const product = {
+            id: 1,
+            name: 'Свеча "Тишина"',
+            price: 1900,
+            emoji: '🕯️'
+        };
         
         // Корзина
         let cart = [];
+        let selectedColor = 'black';
         
-        // Инициализация Telegram
-        Telegram.WebApp.ready();
-        Telegram.WebApp.expand();
-        
-        // Показать вкладку
-        function showTab(tabName) {
+        // Переключение вкладок
+        function switchTab(tabName) {
             // Скрыть все вкладки
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             
-            // Убрать активность у кнопок
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
+            // Снять активность со всех кнопок навигации
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
             });
             
-            // Показать нужную вкладку
-            document.getElementById(tabName).classList.add('active');
+            // Показать выбранную вкладку
+            document.getElementById(`${tabName}-tab`).classList.add('active');
             
-            // Активировать кнопку
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                if (btn.textContent.includes(tabName === 'catalog' ? 'Каталог' : 
-                                           tabName === 'cart' ? 'Корзина' : 'Оплата')) {
-                    btn.classList.add('active');
+            // Активировать кнопку навигации
+            document.querySelectorAll('.nav-item').forEach((item, index) => {
+                const tabs = ['main', 'favorites', 'cart', 'profile'];
+                if (tabs[index] === tabName) {
+                    item.classList.add('active');
                 }
             });
             
-            // Обновить данные если нужно
+            // Если переключились на корзину - обновить ее
             if (tabName === 'cart') {
                 updateCartDisplay();
-            } else if (tabName === 'payment') {
-                updatePaymentTotal();
             }
         }
         
-        // Загрузить каталог
-        function loadCatalog() {
-            const catalogList = document.getElementById('catalogList');
-            catalogList.innerHTML = '';
+        // Выбор цвета
+        function selectColor(color) {
+            selectedColor = color;
             
-            candles.forEach(candle => {
-                const div = document.createElement('div');
-                div.className = 'candle';
-                div.innerHTML = `
-                    <h3>${candle.emoji} ${candle.name}</h3>
-                    <div class="price">${candle.price} ₽</div>
-                    <button onclick="addToCart(${candle.id})">+ Добавить</button>
-                `;
-                catalogList.appendChild(div);
+            // Обновить активный цвет
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('active');
             });
+            
+            event.target.classList.add('active');
         }
         
-        // Добавить в корзину
-        function addToCart(id) {
-            const candle = candles.find(c => c.id === id);
-            const item = cart.find(i => i.id === id);
+        // Добавление в корзину
+        function addToCart() {
+            const colorNames = {
+                'black': 'черная',
+                'cream': 'кремовая',
+                'sand': 'песочная'
+            };
             
-            if (item) {
-                item.quantity += 1;
+            // Проверяем, есть ли уже такая свеча такого цвета в корзине
+            const existingItem = cart.find(item => 
+                item.id === product.id && item.color === selectedColor
+            );
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
             } else {
                 cart.push({
-                    id: id,
-                    name: candle.name,
-                    price: candle.price,
-                    emoji: candle.emoji,
+                    ...product,
+                    color: selectedColor,
+                    colorName: colorNames[selectedColor],
                     quantity: 1
                 });
             }
             
-            alert(`Добавлено: ${candle.name}`);
-            updateCartDisplay();
+            // Показать уведомление
+            showNotification('Добавлено в корзину');
+            
+            // Обновить бейдж корзины
+            updateCartBadge();
         }
         
-        // Обновить отображение корзины
+        // Обновление бейджа корзины
+        function updateCartBadge() {
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            const badge = document.getElementById('cart-badge');
+            
+            if (totalItems > 0) {
+                badge.textContent = totalItems;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+        
+        // Обновление отображения корзины
         function updateCartDisplay() {
-            const cartList = document.getElementById('cartList');
-            const cartTotal = document.getElementById('cartTotal');
+            const cartContent = document.getElementById('cart-content');
+            const cartWithItems = document.getElementById('cart-with-items');
+            const cartItems = document.getElementById('cart-items');
+            const subtotalEl = document.getElementById('subtotal');
+            const totalEl = document.getElementById('total');
             
             if (cart.length === 0) {
-                cartList.innerHTML = 'Корзина пуста';
-                cartTotal.textContent = 'Итого: 0 ₽';
+                cartContent.classList.remove('hidden');
+                cartWithItems.classList.add('hidden');
                 return;
             }
             
-            let html = '';
-            let total = 0;
+            cartContent.classList.add('hidden');
+            cartWithItems.classList.remove('hidden');
             
-            cart.forEach(item => {
+            // Очищаем и заполняем корзину
+            cartItems.innerHTML = '';
+            let subtotal = 0;
+            
+            cart.forEach((item, index) => {
                 const itemTotal = item.price * item.quantity;
-                total += itemTotal;
+                subtotal += itemTotal;
                 
-                html += `
+                const itemHTML = `
                     <div class="cart-item">
-                        ${item.emoji} ${item.name} 
-                        <br>${item.price} ₽ × ${item.quantity} = ${itemTotal} ₽
-                        <button onclick="removeFromCart(${item.id})">❌ Удалить</button>
+                        <div class="cart-item-image">
+                            ${item.emoji}
+                        </div>
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.name}</div>
+                            <div class="cart-item-price">${item.price.toLocaleString()} ₽</div>
+                            <div>${item.colorName}</div>
+                            <div class="cart-item-actions">
+                                <button class="quantity-btn" onclick="changeQuantity(${index}, -1)">−</button>
+                                <span>${item.quantity}</span>
+                                <button class="quantity-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                            </div>
+                        </div>
                     </div>
                 `;
+                
+                cartItems.innerHTML += itemHTML;
             });
             
-            cartList.innerHTML = html;
-            cartTotal.textContent = `Итого: ${total} ₽`;
+            // Обновляем суммы
+            subtotalEl.textContent = subtotal.toLocaleString() + ' ₽';
+            totalEl.textContent = subtotal.toLocaleString() + ' ₽';
+            
+            // Обновляем бейдж
+            updateCartBadge();
         }
         
-        // Удалить из корзины
-        function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
+        // Изменение количества товара
+        function changeQuantity(index, delta) {
+            cart[index].quantity += delta;
+            
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+                showNotification('Товар удален');
+            }
+            
             updateCartDisplay();
         }
         
-        // Обновить сумму для оплаты
-        function updatePaymentTotal() {
+        // Оформление заказа
+        function checkout() {
+            if (cart.length === 0) {
+                showNotification('Корзина пуста');
+                return;
+            }
+            
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            document.getElementById('paymentTotal').textContent = `${total} ₽`;
-        }
-        
-        // Оплата картой (просто демо)
-        function payByCard() {
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             
-            // В реальности здесь была бы интеграция с платежной системой
-            // Для демо просто показываем успех
+            // Собираем данные заказа
+            const order = {
+                type: 'order',
+                items: cart,
+                total: total,
+                timestamp: new Date().toISOString()
+            };
             
-            document.getElementById('orderDetails').textContent = 
-                `Оплачено ${total} ₽ картой. Заказ оформлен!`;
-            document.getElementById('orderResult').style.display = 'block';
+            // Отправляем в Telegram бота
+            Telegram.WebApp.sendData(JSON.stringify(order));
             
-            // Отправляем данные в Telegram бота
-            sendOrderToBot(total, 'card');
+            // Показываем сообщение
+            showNotification('Заказ оформлен!');
             
             // Очищаем корзину
             cart = [];
             updateCartDisplay();
+            
+            // Переключаем на главную
+            setTimeout(() => switchTab('main'), 1000);
         }
         
-        // Оплата СБП
-        function payBySBP() {
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        // Показать уведомление
+        function showNotification(text) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = text;
             
-            // Показываем QR-код (для демо просто текст)
-            alert(`QR-код для оплаты ${total} ₽\n\n` +
-                  `Отсканируйте код в банковском приложении\n` +
-                  `Или переведите на номер: +79001234567\n\n` +
-                  `В комментарии укажите: Свечи`);
+            document.body.appendChild(notification);
             
-            document.getElementById('orderDetails').textContent = 
-                `Ожидаем оплату ${total} ₽ по СБП`;
-            document.getElementById('orderResult').style.display = 'block';
-            
-            sendOrderToBot(total, 'sbp');
-            cart = [];
-        }
-        
-        // Оплата криптой
-        function payByCrypto() {
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const btcAmount = (total / 5000000).toFixed(8);
-            
-            // Показываем адрес для оплаты
-            alert(`Адрес для оплаты:\n\n` +
-                  `BTC: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa\n` +
-                  `Сумма: ${btcAmount} BTC\n\n` +
-                  `После оплаты нажмите "Подтвердить"`);
-            
-            document.getElementById('orderDetails').textContent = 
-                `Ожидаем оплату ${btcAmount} BTC`;
-            document.getElementById('orderResult').style.display = 'block';
-            
-            sendOrderToBot(total, 'crypto');
-            cart = [];
-        }
-        
-        // Отправить заказ в Telegram бота
-        function sendOrderToBot(total, method) {
-            const order = {
-                type: 'order',
-                cart: cart,
-                total: total,
-                payment: method,
-                time: new Date().toLocaleString('ru-RU')
-            };
-            
-            // Отправляем данные в бота
-            Telegram.WebApp.sendData(JSON.stringify(order));
-            
-            // Закрываем приложение через 3 секунды
             setTimeout(() => {
-                Telegram.WebApp.close();
-            }, 3000);
+                notification.remove();
+            }, 2000);
         }
-        
-        // Загружаем каталог при старте
-        window.onload = function() {
-            loadCatalog();
-        };
     </script>
 </body>
 </html>
