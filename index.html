@@ -1,145 +1,261 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Свечной магазин</title>
-    <meta charset="utf-8">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕯️ Свечной магазин</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --tg-theme-bg-color: #0f0f0f;
+            --tg-theme-text-color: #ffffff;
+            --tg-theme-hint-color: #aaaaaa;
+            --tg-theme-link-color: #3390ec;
+            --tg-theme-button-color: #3390ec;
+            --tg-theme-button-text-color: #ffffff;
+            --tg-theme-secondary-bg-color: #1f1f1f;
+            --tg-theme-header-bg-color: #1f1f1f;
+            --tg-theme-accent-text-color: #3390ec;
+            --tg-theme-section-bg-color: #1f1f1f;
+            --tg-theme-section-header-text-color: #ffffff;
+            --border-color: #2d2d2d;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         }
         
         body {
-            background-color: #ffffff;
-            color: #000000;
-            line-height: 1.4;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
         
-        .container {
-            max-width: 430px;
-            margin: 0 auto;
-            padding: 0 16px;
+        .app {
+            max-width: 100%;
+            min-height: 100vh;
         }
         
-        /* Шапка */
+        /* Header */
         .header {
-            text-align: center;
-            padding: 20px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .logo {
-            font-size: 24px;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        
-        /* Карточка товара */
-        .product-card {
-            margin: 20px 0;
-            border: 1px solid #f0f0f0;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .product-image {
-            height: 300px;
-            background: linear-gradient(135deg, #FFF5E1 0%, #FFE8C8 100%);
+            background-color: var(--tg-theme-header-bg-color);
+            padding: 12px 16px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 100px;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
-        .product-info {
-            padding: 20px;
-        }
-        
-        .product-title {
-            font-size: 20px;
+        .header-title {
+            font-size: 17px;
             font-weight: 600;
-            margin-bottom: 8px;
+            color: var(--tg-theme-text-color);
         }
         
-        .product-price {
-            font-size: 24px;
-            font-weight: 600;
-            color: #000000;
-            margin: 15px 0;
-        }
-        
-        .product-color {
+        .header-actions {
             display: flex;
-            gap: 10px;
-            margin: 15px 0;
+            gap: 20px;
         }
         
-        .color-option {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid #f0f0f0;
-            cursor: pointer;
-        }
-        
-        .color-option.active {
-            border-color: #000000;
-        }
-        
-        .color-black {
-            background: #1a1a1a;
-        }
-        
-        .color-cream {
-            background: #FFF5E1;
-        }
-        
-        .color-sand {
-            background: #E6D5B8;
-        }
-        
-        /* Кнопка добавления */
-        .add-to-cart-btn {
-            width: 100%;
-            background: #000000;
-            color: #ffffff;
+        .icon-btn {
+            background: none;
             border: none;
+            color: var(--tg-theme-text-color);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+        }
+        
+        /* Main Content */
+        .main-content {
             padding: 16px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--tg-theme-secondary-bg-color) 0%, #2a2a2a 100%);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        
+        .hero-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            display: block;
+        }
+        
+        .hero-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--tg-theme-text-color);
+        }
+        
+        .hero-subtitle {
+            font-size: 15px;
+            color: var(--tg-theme-hint-color);
+            margin-bottom: 20px;
+        }
+        
+        .cta-button {
+            background-color: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            border: none;
+            border-radius: 12px;
+            padding: 14px 24px;
             font-size: 16px;
             font-weight: 600;
-            border-radius: 8px;
             cursor: pointer;
-            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             transition: opacity 0.2s;
         }
         
-        .add-to-cart-btn:hover {
+        .cta-button:hover {
             opacity: 0.9;
         }
         
-        .add-to-cart-btn:active {
-            opacity: 0.8;
+        /* Categories */
+        .section-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--tg-theme-section-header-text-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         
-        /* Навигация */
+        .see-all {
+            font-size: 15px;
+            color: var(--tg-theme-link-color);
+            text-decoration: none;
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .category-card {
+            background-color: var(--tg-theme-secondary-bg-color);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .category-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        
+        .category-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--tg-theme-text-color);
+        }
+        
+        .category-count {
+            font-size: 13px;
+            color: var(--tg-theme-hint-color);
+            margin-top: 4px;
+        }
+        
+        /* Featured Products */
+        .featured-slider {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 8px;
+            margin-bottom: 24px;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .featured-slider::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .product-card {
+            display: inline-block;
+            width: 280px;
+            background-color: var(--tg-theme-secondary-bg-color);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            margin-right: 12px;
+            vertical-align: top;
+        }
+        
+        .product-image {
+            height: 160px;
+            background: linear-gradient(135deg, #3a2c1a 0%, #5a4a32 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+        
+        .product-info {
+            padding: 16px;
+        }
+        
+        .product-name {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: var(--tg-theme-text-color);
+        }
+        
+        .product-description {
+            font-size: 14px;
+            color: var(--tg-theme-hint-color);
+            margin-bottom: 12px;
+            white-space: normal;
+        }
+        
+        .product-price {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--tg-theme-text-color);
+        }
+        
+        /* Footer Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: #ffffff;
-            border-top: 1px solid #f0f0f0;
-            padding: 12px 0;
+            background-color: var(--tg-theme-header-bg-color);
+            border-top: 1px solid var(--border-color);
+            padding: 8px 0;
+            z-index: 1000;
         }
         
         .nav-items {
             display: flex;
             justify-content: space-around;
-            max-width: 430px;
+            max-width: 500px;
             margin: 0 auto;
         }
         
@@ -147,266 +263,216 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            padding: 8px 12px;
             cursor: pointer;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-item.active {
+            background-color: var(--tg-theme-secondary-bg-color);
         }
         
         .nav-icon {
             font-size: 20px;
+            margin-bottom: 4px;
         }
         
         .nav-text {
             font-size: 12px;
-        }
-        
-        .nav-item.active {
-            color: #000000;
             font-weight: 500;
         }
         
-        /* Корзина */
-        .cart-tab {
-            display: none;
+        /* Adjust content for bottom nav */
+        .main-content {
             padding-bottom: 80px;
         }
         
-        .tab.active {
-            display: block;
-        }
-        
-        .empty-cart {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999999;
-        }
-        
-        .cart-item {
-            display: flex;
-            align-items: center;
-            padding: 20px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .cart-item-image {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #FFF5E1 0%, #FFE8C8 100%);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            margin-right: 16px;
-        }
-        
-        .cart-item-info {
-            flex: 1;
-        }
-        
-        .cart-item-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        
-        .cart-item-price {
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        
-        .cart-item-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .quantity-btn {
-            width: 28px;
-            height: 28px;
-            border: 1px solid #f0f0f0;
-            border-radius: 50%;
-            background: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .cart-total {
-            padding: 20px 0;
-            border-top: 1px solid #f0f0f0;
-            margin-top: 20px;
-        }
-        
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            font-size: 16px;
-        }
-        
-        .total-amount {
-            font-size: 20px;
-            font-weight: 600;
-        }
-        
-        .checkout-btn {
-            width: 100%;
-            background: #000000;
-            color: #ffffff;
-            border: none;
-            padding: 16px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        
-        /* Уведомление */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #000000;
-            color: #ffffff;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: 500;
-            animation: slideIn 0.3s ease-out;
-            z-index: 1000;
-        }
-        
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
+        /* Utility Classes */
         .hidden {
             display: none;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--tg-theme-hint-color);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-card {
+                width: 240px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Шапка -->
+    <div class="app">
+        <!-- Header -->
         <div class="header">
-            <div class="logo">СВЕЧНОЙ</div>
-        </div>
-        
-        <!-- Главная (каталог) -->
-        <div id="main-tab" class="tab active">
-            <div class="product-card">
-                <div class="product-image">
-                    🕯️
-                </div>
-                <div class="product-info">
-                    <div class="product-title">Свеча "Тишина"</div>
-                    <div class="product-price">1 900 ₽</div>
-                    
-                    <div>Натуральный воск, аромат сандала</div>
-                    
-                    <div style="margin: 15px 0;">Цвет:</div>
-                    <div class="product-color">
-                        <div class="color-option color-black active" onclick="selectColor('black')"></div>
-                        <div class="color-option color-cream" onclick="selectColor('cream')"></div>
-                        <div class="color-option color-sand" onclick="selectColor('sand')"></div>
-                    </div>
-                    
-                    <button class="add-to-cart-btn" onclick="addToCart()">
-                        Добавить в корзину
-                    </button>
-                </div>
+            <div class="header-title">🕯️ Свечной</div>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="toggleSearch()">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="icon-btn" onclick="openCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                </button>
             </div>
         </div>
         
-        <!-- Корзина -->
-        <div id="cart-tab" class="cart-tab tab">
-            <div id="cart-content">
-                <div class="empty-cart">
-                    🛒<br><br>
-                    Корзина пуста
+        <!-- Main Content -->
+        <div class="main-content fade-in">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <span class="hero-icon">🕯️</span>
+                <h1 class="hero-title">Свечи ручной работы</h1>
+                <p class="hero-subtitle">Натуральный воск, уютные ароматы, созданные с любовью</p>
+                <button class="cta-button" onclick="openCatalog()">
+                    <i class="fas fa-store"></i>
+                    Смотреть каталог
+                </button>
+            </div>
+            
+            <!-- Categories -->
+            <div class="section">
+                <div class="section-title">
+                    <span>Категории</span>
+                    <a href="catalog.html" class="see-all">Все</a>
+                </div>
+                <div class="categories-grid">
+                    <div class="category-card" onclick="openCategory('aromatic')">
+                        <span class="category-icon">🌸</span>
+                        <div class="category-name">Ароматические</div>
+                        <div class="category-count">8 товаров</div>
+                    </div>
+                    <div class="category-card" onclick="openCategory('decorative')">
+                        <span class="category-icon">🎨</span>
+                        <div class="category-name">Декоративные</div>
+                        <div class="category-count">5 товаров</div>
+                    </div>
+                    <div class="category-card" onclick="openCategory('soy')">
+                        <span class="category-icon">🌱</span>
+                        <div class="category-name">Соевые</div>
+                        <div class="category-count">6 товаров</div>
+                    </div>
+                    <div class="category-card" onclick="openCategory('gifts')">
+                        <span class="category-icon">🎁</span>
+                        <div class="category-name">Подарочные наборы</div>
+                        <div class="category-count">4 товара</div>
+                    </div>
                 </div>
             </div>
             
-            <div id="cart-with-items" class="hidden">
-                <div id="cart-items"></div>
-                
-                <div class="cart-total">
-                    <div class="total-row">
-                        <span>Сумма</span>
-                        <span id="subtotal">0 ₽</span>
-                    </div>
-                    <div class="total-row">
-                        <span>Доставка</span>
-                        <span>Бесплатно</span>
-                    </div>
-                    <div class="total-row total-amount">
-                        <span>Итого</span>
-                        <span id="total">0 ₽</span>
+            <!-- Featured Products -->
+            <div class="section">
+                <div class="section-title">
+                    <span>Популярное</span>
+                    <a href="catalog.html" class="see-all">Все</a>
+                </div>
+                <div class="featured-slider">
+                    <!-- Product 1 -->
+                    <div class="product-card" onclick="openProduct(1)">
+                        <div class="product-image">
+                            🕯️
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">"Тишина"</div>
+                            <div class="product-description">Аромат лаванды и сандала</div>
+                            <div class="product-price">1 900 ₽</div>
+                        </div>
                     </div>
                     
-                    <button class="checkout-btn" onclick="checkout()">
-                        Перейти к оплате
-                    </button>
+                    <!-- Product 2 -->
+                    <div class="product-card" onclick="openProduct(2)">
+                        <div class="product-image" style="background: linear-gradient(135deg, #1a2e3a 0%, #2a4a5a 100%);">
+                            🕯️
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">"Уют"</div>
+                            <div class="product-description">Ваниль и корица</div>
+                            <div class="product-price">2 100 ₽</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 3 -->
+                    <div class="product-card" onclick="openProduct(3)">
+                        <div class="product-image" style="background: linear-gradient(135deg, #2a1a3a 0%, #4a2a5a 100%);">
+                            🕯️
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">"Рассвет"</div>
+                            <div class="product-description">Цитрусовые ноты</div>
+                            <div class="product-price">1 800 ₽</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Benefits -->
+            <div class="hero-section" style="text-align: left; padding: 20px;">
+                <h3 style="margin-bottom: 16px; font-size: 17px;">✨ Почему выбирают нас</h3>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="font-size: 20px;">🌿</div>
+                        <div>
+                            <div style="font-weight: 500;">Натуральные материалы</div>
+                            <div style="font-size: 14px; color: var(--tg-theme-hint-color);">Только экологичное сырье</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="font-size: 20px;">👐</div>
+                        <div>
+                            <div style="font-weight: 500;">Ручная работа</div>
+                            <div style="font-size: 14px; color: var(--tg-theme-hint-color);">Каждая свеча уникальна</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="font-size: 20px;">🚚</div>
+                        <div>
+                            <div style="font-weight: 500;">Быстрая доставка</div>
+                            <div style="font-size: 14px; color: var(--tg-theme-hint-color);">По всей России</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- Избранное -->
-        <div id="favorites-tab" class="tab">
-            <div class="empty-cart">
-                ❤️<br><br>
-                В избранном пока ничего нет
-            </div>
-        </div>
-        
-        <!-- Профиль -->
-        <div id="profile-tab" class="tab">
-            <div class="empty-cart">
-                👤<br><br>
-                Раздел в разработке
-            </div>
-        </div>
-    </div>
-    
-    <!-- Нижняя навигация -->
-    <div class="bottom-nav">
-        <div class="nav-items">
-            <div class="nav-item active" onclick="switchTab('main')">
-                <div class="nav-icon">🏠</div>
-                <div class="nav-text">Главная</div>
-            </div>
-            <div class="nav-item" onclick="switchTab('favorites')">
-                <div class="nav-icon">❤️</div>
-                <div class="nav-text">Избранное</div>
-            </div>
-            <div class="nav-item" onclick="switchTab('cart')">
-                <div class="nav-icon">🛒</div>
-                <div class="nav-text">Корзина</div>
-                <div id="cart-badge" class="hidden" style="
-                    position: absolute;
-                    top: -5px;
-                    right: -5px;
-                    background: #ff3b30;
-                    color: white;
-                    width: 18px;
-                    height: 18px;
-                    border-radius: 50%;
-                    font-size: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                "></div>
-            </div>
-            <div class="nav-item" onclick="switchTab('profile')">
-                <div class="nav-icon">👤</div>
-                <div class="nav-text">Профиль</div>
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-items">
+                <a href="index.html" class="nav-item active">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-text">Главная</div>
+                </a>
+                <a href="catalog.html" class="nav-item">
+                    <div class="nav-icon">🛍️</div>
+                    <div class="nav-text">Каталог</div>
+                </a>
+                <a href="cart.html" class="nav-item">
+                    <div class="nav-icon">🛒</div>
+                    <div class="nav-text">Корзина</div>
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <div class="nav-icon">👤</div>
+                    <div class="nav-text">Профиль</div>
+                </a>
             </div>
         </div>
     </div>
@@ -415,213 +481,41 @@
         // Инициализация Telegram WebApp
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
-        Telegram.WebApp.setBackgroundColor('#ffffff');
         
-        // Данные о товаре
-        const product = {
-            id: 1,
-            name: 'Свеча "Тишина"',
-            price: 1900,
-            emoji: '🕯️'
-        };
+        // Используем цвета Telegram
+        document.documentElement.style.setProperty('--tg-theme-bg-color', Telegram.WebApp.backgroundColor);
+        document.documentElement.style.setProperty('--tg-theme-text-color', Telegram.WebApp.textColor);
+        document.documentElement.style.setProperty('--tg-theme-hint-color', Telegram.WebApp.hintColor);
+        document.documentElement.style.setProperty('--tg-theme-link-color', Telegram.WebApp.linkColor);
+        document.documentElement.style.setProperty('--tg-theme-button-color', Telegram.WebApp.buttonColor);
+        document.documentElement.style.setProperty('--tg-theme-button-text-color', Telegram.WebApp.buttonTextColor);
         
-        // Корзина
-        let cart = [];
-        let selectedColor = 'black';
-        
-        // Переключение вкладок
-        function switchTab(tabName) {
-            // Скрыть все вкладки
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Снять активность со всех кнопок навигации
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Показать выбранную вкладку
-            document.getElementById(`${tabName}-tab`).classList.add('active');
-            
-            // Активировать кнопку навигации
-            document.querySelectorAll('.nav-item').forEach((item, index) => {
-                const tabs = ['main', 'favorites', 'cart', 'profile'];
-                if (tabs[index] === tabName) {
-                    item.classList.add('active');
-                }
-            });
-            
-            // Если переключились на корзину - обновить ее
-            if (tabName === 'cart') {
-                updateCartDisplay();
-            }
+        // Функции навигации
+        function openCatalog() {
+            window.location.href = 'catalog.html';
         }
         
-        // Выбор цвета
-        function selectColor(color) {
-            selectedColor = color;
-            
-            // Обновить активный цвет
-            document.querySelectorAll('.color-option').forEach(option => {
-                option.classList.remove('active');
-            });
-            
-            event.target.classList.add('active');
+        function openCart() {
+            window.location.href = 'cart.html';
         }
         
-        // Добавление в корзину
-        function addToCart() {
-            const colorNames = {
-                'black': 'черная',
-                'cream': 'кремовая',
-                'sand': 'песочная'
-            };
-            
-            // Проверяем, есть ли уже такая свеча такого цвета в корзине
-            const existingItem = cart.find(item => 
-                item.id === product.id && item.color === selectedColor
-            );
-            
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({
-                    ...product,
-                    color: selectedColor,
-                    colorName: colorNames[selectedColor],
-                    quantity: 1
-                });
-            }
-            
-            // Показать уведомление
-            showNotification('Добавлено в корзину');
-            
-            // Обновить бейдж корзины
-            updateCartBadge();
+        function openProduct(productId) {
+            window.location.href = `product.html?id=${productId}`;
         }
         
-        // Обновление бейджа корзины
-        function updateCartBadge() {
-            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-            const badge = document.getElementById('cart-badge');
-            
-            if (totalItems > 0) {
-                badge.textContent = totalItems;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
+        function openCategory(categoryId) {
+            window.location.href = `catalog.html?category=${categoryId}`;
         }
         
-        // Обновление отображения корзины
-        function updateCartDisplay() {
-            const cartContent = document.getElementById('cart-content');
-            const cartWithItems = document.getElementById('cart-with-items');
-            const cartItems = document.getElementById('cart-items');
-            const subtotalEl = document.getElementById('subtotal');
-            const totalEl = document.getElementById('total');
-            
-            if (cart.length === 0) {
-                cartContent.classList.remove('hidden');
-                cartWithItems.classList.add('hidden');
-                return;
-            }
-            
-            cartContent.classList.add('hidden');
-            cartWithItems.classList.remove('hidden');
-            
-            // Очищаем и заполняем корзину
-            cartItems.innerHTML = '';
-            let subtotal = 0;
-            
-            cart.forEach((item, index) => {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
-                
-                const itemHTML = `
-                    <div class="cart-item">
-                        <div class="cart-item-image">
-                            ${item.emoji}
-                        </div>
-                        <div class="cart-item-info">
-                            <div class="cart-item-title">${item.name}</div>
-                            <div class="cart-item-price">${item.price.toLocaleString()} ₽</div>
-                            <div>${item.colorName}</div>
-                            <div class="cart-item-actions">
-                                <button class="quantity-btn" onclick="changeQuantity(${index}, -1)">−</button>
-                                <span>${item.quantity}</span>
-                                <button class="quantity-btn" onclick="changeQuantity(${index}, 1)">+</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                cartItems.innerHTML += itemHTML;
-            });
-            
-            // Обновляем суммы
-            subtotalEl.textContent = subtotal.toLocaleString() + ' ₽';
-            totalEl.textContent = subtotal.toLocaleString() + ' ₽';
-            
-            // Обновляем бейдж
-            updateCartBadge();
+        function toggleSearch() {
+            // В будущем можно добавить поиск
+            alert('Поиск будет добавлен в следующем обновлении');
         }
         
-        // Изменение количества товара
-        function changeQuantity(index, delta) {
-            cart[index].quantity += delta;
-            
-            if (cart[index].quantity <= 0) {
-                cart.splice(index, 1);
-                showNotification('Товар удален');
-            }
-            
-            updateCartDisplay();
-        }
-        
-        // Оформление заказа
-        function checkout() {
-            if (cart.length === 0) {
-                showNotification('Корзина пуста');
-                return;
-            }
-            
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            // Собираем данные заказа
-            const order = {
-                type: 'order',
-                items: cart,
-                total: total,
-                timestamp: new Date().toISOString()
-            };
-            
-            // Отправляем в Telegram бота
-            Telegram.WebApp.sendData(JSON.stringify(order));
-            
-            // Показываем сообщение
-            showNotification('Заказ оформлен!');
-            
-            // Очищаем корзину
-            cart = [];
-            updateCartDisplay();
-            
-            // Переключаем на главную
-            setTimeout(() => switchTab('main'), 1000);
-        }
-        
-        // Показать уведомление
-        function showNotification(text) {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.textContent = text;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 2000);
+        // Показываем пользователя Telegram если есть
+        if (Telegram.WebApp.initDataUnsafe.user) {
+            const user = Telegram.WebApp.initDataUnsafe.user;
+            console.log('Пользователь:', user.first_name);
         }
     </script>
 </body>
