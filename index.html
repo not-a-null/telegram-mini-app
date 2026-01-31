@@ -1,146 +1,377 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Простое мини-приложение</title>
+    <title>🕯️ Свечной магазин</title>
     <meta charset="utf-8">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
             font-family: Arial, sans-serif;
+        }
+        
+        body {
             padding: 20px;
-            text-align: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            min-height: 100vh;
-            margin: 0;
+            background: #f8f4e9;
         }
         
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            max-width: 400px;
-            margin: 50px auto;
+        /* Вкладки */
+        .tab {
+            display: none;
+            padding: 10px;
         }
         
-        button {
+        .active {
+            display: block;
+        }
+        
+        /* Кнопки вкладок */
+        .tabs-header {
+            display: flex;
+            margin-bottom: 20px;
             background: white;
-            color: #667eea;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
             border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: white;
+            font-size: 16px;
             cursor: pointer;
-            margin: 10px;
+        }
+        
+        .tab-btn.active {
+            background: #e6b89c;
+            color: white;
             font-weight: bold;
         }
         
-        button:hover {
-            transform: scale(1.05);
+        /* Карточка товара */
+        .candle {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        h1 {
-            margin-bottom: 30px;
+        .candle h3 {
+            margin: 0 0 10px 0;
+            color: #8b4513;
         }
         
-        .emoji-btn {
-            font-size: 24px;
+        .price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #d2691e;
+            margin: 10px 0;
+        }
+        
+        /* Кнопки */
+        button {
+            background: #d2691e;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
             margin: 5px;
-            padding: 10px 20px;
+        }
+        
+        button:hover {
+            background: #8b4513;
+        }
+        
+        /* Корзина */
+        .cart-item {
+            background: white;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .total {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            color: #8b4513;
+        }
+        
+        /* Оплата */
+        .payment-btn {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 15px;
+            font-size: 18px;
+        }
+        
+        #orderResult {
+            text-align: center;
+            padding: 20px;
+            background: #e6ffed;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎮 Простая игра</h1>
-        <p>Нажми кнопку, чтобы отправить результат в Telegram!</p>
-        
-        <div id="buttons">
-            <!-- Кнопки будут добавлены через JavaScript -->
+    <h1>🕯️ Магазин свечей</h1>
+    
+    <!-- Кнопки вкладок -->
+    <div class="tabs-header">
+        <button class="tab-btn active" onclick="showTab('catalog')">Каталог</button>
+        <button class="tab-btn" onclick="showTab('cart')">Корзина</button>
+        <button class="tab-btn" onclick="showTab('payment')">Оплата</button>
+    </div>
+    
+    <!-- КАТАЛОГ -->
+    <div id="catalog" class="tab active">
+        <div id="catalogList">
+            <!-- Товары загрузятся через JS -->
         </div>
+    </div>
+    
+    <!-- КОРЗИНА -->
+    <div id="cart" class="tab">
+        <div id="cartList">
+            Корзина пуста
+        </div>
+        <div id="cartTotal" class="total">Итого: 0 ₽</div>
+        <button onclick="showTab('payment')">💳 Перейти к оплате</button>
+    </div>
+    
+    <!-- ОПЛАТА -->
+    <div id="payment" class="tab">
+        <h2>💳 Оплата заказа</h2>
+        <div id="paymentTotal" class="total">0 ₽</div>
         
-        <br>
-        <button onclick="sendCustomMessage()">📨 Отправить "Привет!"</button>
-        <br><br>
-        <button onclick="closeApp()">❌ Закрыть приложение</button>
+        <button class="payment-btn" onclick="payByCard()">💳 Картой онлайн</button>
+        <button class="payment-btn" onclick="payBySBP()">📱 СБП (по QR-коду)</button>
+        <button class="payment-btn" onclick="payByCrypto()">₿ Криптовалютой</button>
+        
+        <div id="orderResult">
+            <h3>✅ Заказ оформлен!</h3>
+            <p id="orderDetails"></p>
+        </div>
     </div>
 
     <script>
-        // 📱 Инициализация Telegram WebApp
-        Telegram.WebApp.ready();
+        // Простые данные о свечах
+        const candles = [
+            {id: 1, name: "Ванильная свеча", price: 500, emoji: "🕯️"},
+            {id: 2, name: "Лавандовая свеча", price: 600, emoji: "🌸"},
+            {id: 3, name: "Хвойная свеча", price: 550, emoji: "🌲"},
+            {id: 4, name: "Цитрусовая свеча", price: 450, emoji: "🍊"},
+            {id: 5, name: "Шоколадная свеча", price: 650, emoji: "🍫"},
+            {id: 6, name: "Морская свеча", price: 700, emoji: "🌊"}
+        ];
         
-        // Увеличиваем размер приложения
+        // Корзина
+        let cart = [];
+        
+        // Инициализация Telegram
+        Telegram.WebApp.ready();
         Telegram.WebApp.expand();
         
-        // Показываем кнопки с эмодзи
-        const buttonsContainer = document.getElementById('buttons');
-        const emojis = ['🎯', '🏆', '⭐', '❤️', '🚀', '🎨'];
-        
-        emojis.forEach(emoji => {
-            const button = document.createElement('button');
-            button.className = 'emoji-btn';
-            button.textContent = emoji;
-            button.onclick = () => sendEmoji(emoji);
-            buttonsContainer.appendChild(button);
-        });
-        
-        // 📤 Функция отправки эмодзи
-        function sendEmoji(emoji) {
-            const message = `Я выбрал: ${emoji}`;
-            Telegram.WebApp.sendData(message);
-            showNotification(`Отправлено: ${emoji}`);
-        }
-        
-        // 📤 Функция отправки своего сообщения
-        function sendCustomMessage() {
-            Telegram.WebApp.sendData("Привет от мини-приложения! 👋");
-            showNotification("Сообщение отправлено!");
-        }
-        
-        // 🚪 Закрыть приложение
-        function closeApp() {
-            Telegram.WebApp.close();
-        }
-        
-        // 🔔 Показываем уведомление
-        function showNotification(text) {
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: white;
-                color: #667eea;
-                padding: 10px 20px;
-                border-radius: 10px;
-                z-index: 1000;
-                font-weight: bold;
-            `;
-            notification.textContent = text;
-            document.body.appendChild(notification);
+        // Показать вкладку
+        function showTab(tabName) {
+            // Скрыть все вкладки
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
             
+            // Убрать активность у кнопок
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Показать нужную вкладку
+            document.getElementById(tabName).classList.add('active');
+            
+            // Активировать кнопку
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                if (btn.textContent.includes(tabName === 'catalog' ? 'Каталог' : 
+                                           tabName === 'cart' ? 'Корзина' : 'Оплата')) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Обновить данные если нужно
+            if (tabName === 'cart') {
+                updateCartDisplay();
+            } else if (tabName === 'payment') {
+                updatePaymentTotal();
+            }
+        }
+        
+        // Загрузить каталог
+        function loadCatalog() {
+            const catalogList = document.getElementById('catalogList');
+            catalogList.innerHTML = '';
+            
+            candles.forEach(candle => {
+                const div = document.createElement('div');
+                div.className = 'candle';
+                div.innerHTML = `
+                    <h3>${candle.emoji} ${candle.name}</h3>
+                    <div class="price">${candle.price} ₽</div>
+                    <button onclick="addToCart(${candle.id})">+ Добавить</button>
+                `;
+                catalogList.appendChild(div);
+            });
+        }
+        
+        // Добавить в корзину
+        function addToCart(id) {
+            const candle = candles.find(c => c.id === id);
+            const item = cart.find(i => i.id === id);
+            
+            if (item) {
+                item.quantity += 1;
+            } else {
+                cart.push({
+                    id: id,
+                    name: candle.name,
+                    price: candle.price,
+                    emoji: candle.emoji,
+                    quantity: 1
+                });
+            }
+            
+            alert(`Добавлено: ${candle.name}`);
+            updateCartDisplay();
+        }
+        
+        // Обновить отображение корзины
+        function updateCartDisplay() {
+            const cartList = document.getElementById('cartList');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                cartList.innerHTML = 'Корзина пуста';
+                cartTotal.textContent = 'Итого: 0 ₽';
+                return;
+            }
+            
+            let html = '';
+            let total = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                html += `
+                    <div class="cart-item">
+                        ${item.emoji} ${item.name} 
+                        <br>${item.price} ₽ × ${item.quantity} = ${itemTotal} ₽
+                        <button onclick="removeFromCart(${item.id})">❌ Удалить</button>
+                    </div>
+                `;
+            });
+            
+            cartList.innerHTML = html;
+            cartTotal.textContent = `Итого: ${total} ₽`;
+        }
+        
+        // Удалить из корзины
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartDisplay();
+        }
+        
+        // Обновить сумму для оплаты
+        function updatePaymentTotal() {
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('paymentTotal').textContent = `${total} ₽`;
+        }
+        
+        // Оплата картой (просто демо)
+        function payByCard() {
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // В реальности здесь была бы интеграция с платежной системой
+            // Для демо просто показываем успех
+            
+            document.getElementById('orderDetails').textContent = 
+                `Оплачено ${total} ₽ картой. Заказ оформлен!`;
+            document.getElementById('orderResult').style.display = 'block';
+            
+            // Отправляем данные в Telegram бота
+            sendOrderToBot(total, 'card');
+            
+            // Очищаем корзину
+            cart = [];
+            updateCartDisplay();
+        }
+        
+        // Оплата СБП
+        function payBySBP() {
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // Показываем QR-код (для демо просто текст)
+            alert(`QR-код для оплаты ${total} ₽\n\n` +
+                  `Отсканируйте код в банковском приложении\n` +
+                  `Или переведите на номер: +79001234567\n\n` +
+                  `В комментарии укажите: Свечи`);
+            
+            document.getElementById('orderDetails').textContent = 
+                `Ожидаем оплату ${total} ₽ по СБП`;
+            document.getElementById('orderResult').style.display = 'block';
+            
+            sendOrderToBot(total, 'sbp');
+            cart = [];
+        }
+        
+        // Оплата криптой
+        function payByCrypto() {
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const btcAmount = (total / 5000000).toFixed(8);
+            
+            // Показываем адрес для оплаты
+            alert(`Адрес для оплаты:\n\n` +
+                  `BTC: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa\n` +
+                  `Сумма: ${btcAmount} BTC\n\n` +
+                  `После оплаты нажмите "Подтвердить"`);
+            
+            document.getElementById('orderDetails').textContent = 
+                `Ожидаем оплату ${btcAmount} BTC`;
+            document.getElementById('orderResult').style.display = 'block';
+            
+            sendOrderToBot(total, 'crypto');
+            cart = [];
+        }
+        
+        // Отправить заказ в Telegram бота
+        function sendOrderToBot(total, method) {
+            const order = {
+                type: 'order',
+                cart: cart,
+                total: total,
+                payment: method,
+                time: new Date().toLocaleString('ru-RU')
+            };
+            
+            // Отправляем данные в бота
+            Telegram.WebApp.sendData(JSON.stringify(order));
+            
+            // Закрываем приложение через 3 секунды
             setTimeout(() => {
-                document.body.removeChild(notification);
-            }, 2000);
+                Telegram.WebApp.close();
+            }, 3000);
         }
         
-        // 🎨 Меняем цвет фона по нажатию
-        document.addEventListener('click', function(e) {
-            if (e.target.tagName === 'BUTTON') return;
-            
-            const colors = [
-                'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-                'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-                'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
-            ];
-            
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            document.body.style.background = randomColor;
-        });
+        // Загружаем каталог при старте
+        window.onload = function() {
+            loadCatalog();
+        };
     </script>
 </body>
 </html>
